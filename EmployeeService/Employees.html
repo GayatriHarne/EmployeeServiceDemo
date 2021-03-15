@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="Scripts/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        /* Calls GetEmployee API and loads data in table */
+        $(document).ready(function () {
+            var ulEmployees = $('#tblEmployees');
+            $('#btnEmployees').click(function () {
+                var username = $('#txtUsername').val();
+                var password = $('#txtPassword').val();
+                $.ajax({
+                    type: 'GET',
+                    url: 'api/employees',
+                    dataType: 'json',
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(username + ':' + password)
+                    },
+                    success: function (data) {
+                        ulEmployees.empty();
+                        ulEmployees.append(
+                            '<tr>' +
+                            '<td>Id</td>' +
+                            '<td>FirstName</td>' +
+                            '<td>LastName</td>' +
+                            '<td>Gender</td>' +
+                            '<td>Salary</td>' +
+                            '</tr>');
+                        $.each(data, function (index, val) {                              
+                            ulEmployees.append(                                
+                                '<tr><td>' +
+                                val.Id + '</td><td> ' +
+                                val.FirstName + '</td><td> ' +
+                                val.LastName + '</td><td> ' +
+                                val.Gender + '</td><td> ' +
+                                val.Salary +
+                                '</td></tr>' 
+                                );
+                        });
+                    },
+                  
+                    complete: function (jqXHR) {
+                        if (jqXHR.status == '401') {
+                            ulEmployees.empty();
+                            ulEmployees.append('<li style =color:red>' + jqXHR.status + ' : ' + jqXHR.statusText + '</li>');
+                        }
+                    }
+                });
+
+            });
+            $('#btnClear').click(function () {
+                ulEmployees.empty();
+            })
+        })
+    </script>
+</head>
+<body>
+    <div class="col-md-10 col-md-offset-1">
+        <div class="well">
+            <table class="table table-bordered">
+                <tr class="success">
+                    <td colspan="2">
+                        Enter User Credentials
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Username
+                    </td>
+                    <td>
+                        <input type="text" id="txtUsername" placeholder="Email" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Password
+                    </td>
+                    <td>
+                        <input type="password" id="txtPassword" placeholder="Password" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="success" colspan="2">
+                        <input id="btnEmployees" class="btn btn-success" type="button" value="Authenticate and GetEmployees" />
+                        <input id="btnClear" class="btn btn-success" type="button" value="Clear" />
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-10 col-md-offset-1 ">
+        <div id="divEmployeeData">
+            <table id="tblEmployees" class="table table-bordered">
+            </table>
+        </div>
+    </div>
+            
+
+</body>
+</html>         

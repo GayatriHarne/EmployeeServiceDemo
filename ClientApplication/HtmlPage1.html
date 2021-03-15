@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="Scripts/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var ulEmployees = $('#ulEmployees');
+            $('#btnEmployees').click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://localhost:44362/api/employees',
+                    dataType: 'json',
+                    success: function (data) {
+                        ulEmployees.empty();
+                        $.each(data, function (index, val) {
+                            var FullName = val.FirstName + ' ' + val.LastName;
+                            ulEmployees.append('<li>'+ FullName+'</li>');
+                        });
+                    }
+                });
+
+            });
+            $('#btnClear').click(function () {
+                ulEmployees.empty();
+            })
+        })
+    </script>
+</head>
+<body>
+    <input id="btnEmployees" type="button" value="GetEmployees" />
+    <input id="btnClear" type="button" value="Clear" />
+    <ul id="ulEmployees"></ul>
+</body>
+</html>         
